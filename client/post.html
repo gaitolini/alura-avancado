@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- aluraframe/client/post.html -->
 <html>
 
 <head>
@@ -6,16 +6,14 @@
     <title>Negociações</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
-
 </head>
 
 <body class="container">
-
-    <h1 class="text-center">Negociações</h1>
+    <h1>Envia Negociações</h1>
     <div id="mensagemView">
         <p></p>
     </div>
-    <form class="form" onsubmit="negociacaoController.adiciona(event)">
+    <form class="form">
 
         <div class="form-group">
             <label for="data">Data</label>
@@ -32,26 +30,13 @@
             <input id="valor" type="number" class="form-control" min="0.01" step="0.01" value="0.0" required />
         </div>
 
-        <button class="btn btn-primary" type="submit">Incluir</button>
+        <button class="btn btn-primary" type="submit" onclick="enviaNegociacoesController.enviaNegociacao(event)">Enviar
+            dados
+            para
+            servidor</button>
     </form>
-
-    <div class="text-center">
-        <button onclick="negociacaoController.importaNegociacoes()" class="btn btn-primary text-center" type="button">
-            Importar Negociações
-        </button>
-        <button onclick="negociacaoController.apaga()" class="btn btn-primary text-center" type="button">
-            Apagar
-        </button>
-    </div>
-    <br>
-    <br>
-
-    <div id="negociacoesView"></div>
-
-
-    <!-- <script src="./js/index.js"></script> -->
     <script src="./js/app/models/Negociacao.js"></script>
-    <script src="./js/app/controllers/NegociacaoController.js"></script>
+    <script src="./js/app/controllers/EnviaNegociacoesController.js"></script>
     <script src="./js/app/helpers/DateHelper.js"></script>
     <script src="./js/app/models/ListaNegociacoes.js"></script>
     <script src="./js/app/views/View.js"></script>
@@ -64,7 +49,11 @@
     <script src="./js/app/services/NegociacaoService.js"></script>
     <script src="./js/app/services/HttpService.js"></script>
     <script>
-        let negociacaoController = new NegociacaoController();
+
+        let enviaNegociacoesController = new EnviaNegociacoesController();
+        console.log('Intanciou o EnviaNegociacoesController');
+
+
     </script>
 </body>
 
