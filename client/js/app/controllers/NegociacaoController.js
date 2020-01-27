@@ -7,6 +7,8 @@ class NegociacaoController {
         this._inputQuantidade = $("#quantidade");
         this._inputValor = $("#valor");
 
+        this._ordemAtual = '';
+
         this._mensagem = new Bind(
             new Mensagem(),
             new MensageView($("#mensagemView")),
@@ -16,7 +18,7 @@ class NegociacaoController {
         this._listaNegociacoes = new Bind(
             new ListaNegociacoes(),
             new NegociacoesViews($("#negociacoesView")),
-            'adiciona', 'limpa'
+            'adiciona', 'limpa', 'ordena', 'inverteOrdem'
         );
 
     }
@@ -47,9 +49,27 @@ class NegociacaoController {
     adiciona(event) {
 
         event.preventDefault();
-        this._listaNegociacoes.adiciona(this._criaNegociacao());
-        this._mensagem.texto = 'Mensagem adionada com sucesso';
-        this._limpaFormulario();
+
+        try {
+
+            this._listaNegociacoes.adiciona(this._criaNegociacao());
+            this._mensagem.texto = 'Mensagem adionada com sucesso';
+            this._limpaFormulario();
+        } catch (erro) {
+            this._mensagem.texto = erro;
+        }
+    }
+
+    ordena(coluna) {
+        if (this._ordemAtual == coluna) {
+            //inverte a  ordem da lista
+            this._listaNegociacoes.inverteOrdem();
+        } else {
+
+            this._listaNegociacoes.ordena((a, b) => a[coluna] - b[coluna]);
+        }
+        this._ordemAtual = coluna;
+
     }
 
     importaNegociacoes() {

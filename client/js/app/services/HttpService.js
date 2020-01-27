@@ -33,7 +33,7 @@ class HttpService {
         });
     }
 
-    set(url, objeto) {
+    post(url, objeto) {
         return new Promise((resolve, reject) => {
 
             let xhr = new XMLHttpRequest();

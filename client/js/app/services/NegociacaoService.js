@@ -60,7 +60,7 @@ class NegociacaoService {
 
         return new Promise((resolve, reject) => {
 
-            this._http.set('/negociacoes', negociacao)
+            this._http.post('/negociacoes', negociacao)
                 .then(mensagemOK => {
                     console.log(mensagemOK);
                     resolve('Negociação enviada para o servidor com sucesso.');

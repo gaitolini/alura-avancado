@@ -19,7 +19,11 @@
 
         <div class="form-group">
             <label for="data">Data</label>
-            <input type="date" id="data" class="form-control" required autofocus />
+            <!-- Só funciona no Chrome -->
+            <!-- <input type="date" id="data" class="form-control" required autofocus /> -->
+
+            <!-- funciona no Firefox e Chrome! -->
+            <input type="text" placeholder="dd/mm/aaaa" id="data" class="form-control" required autofocus />
         </div>
 
         <div class="form-group">
