@@ -10,6 +10,7 @@
 
 <body>
     <script src="./js/app/models/Negociacao.js"></script>
+    <script src="./js/app/controllers/NegociacaoController.js"></script>
     <script>
         var openRequest = window.indexedDB.open('negociacoesDB', 3);
         var conexao;
@@ -55,6 +56,35 @@
                 console.log('Houve um erro na conexão!');
             }
         }
+
+        function listar() {
+            let transaction = conexao.transaction(['negociacoes'], 'readwrite');
+            let store = transaction.objectStore('negociacoes');
+            let negociacoes = [];
+            let cursor = store.openCursor();
+
+
+            cursor.onsuccess = e => {
+                let atual = e.target.result;
+
+                if (atual) {
+                    let dado = atual.value;
+                    negociacoes.push(new Negociacao(dado._data, dado._quantidade, dado._valor));
+
+                    atual.continue();
+                } else {
+                    console.log(negociacoes)
+                }
+            }
+
+            cursor.onerror = e => {
+
+                console.log(e.target.error.name);
+
+
+            }
+        }
+
     </script>
 </body>
 
