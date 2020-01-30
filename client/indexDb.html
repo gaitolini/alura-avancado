@@ -12,8 +12,8 @@
     <script src="./js/app/models/Negociacao.js"></script>
     <script src="./js/app/controllers/NegociacaoController.js"></script>
     <script>
-        var openRequest = window.indexedDB.open('negociacoesDB', 3);
-        var conexao;
+        let openRequest = window.indexedDB.open('negociacoesDB', 3);
+        let conexao;
 
         openRequest.onupgradeneeded = e => {
 
