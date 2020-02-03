@@ -21,6 +21,17 @@ class NegociacaoController {
             'adiciona', 'limpa', 'ordena', 'inverteOrdem'
         );
 
+        //carregando o banco de dado 
+        ConnectionFactory.getConnection()
+            .then(connection => new NegociacaoDao(connection))
+            .then(dao => dao.listaTodos())
+            .then(negociacoes =>
+                negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao)))
+            .catch(erro => {
+                console.log(erro);
+                this._mensagem.texto = 'Não foi possivel carregar as negociaçõeso do BD';
+
+            });
     }
 
     _limpaFormulario() {
@@ -42,7 +53,19 @@ class NegociacaoController {
     apaga() {
         this._listaNegociacoes.limpa();
 
-        this._mensagem.texto = "Negociações apagadas com sucessos!";
+
+        ConnectionFactory.getConnection()
+            .then(connection => {
+                new NegociacaoDao(connection)
+                    .apagaTodos()
+                    .then(msg => {
+                        this._mensagem.texto = msg;
+                        this._limpaFormulario;
+                    })
+
+            })
+            .catch(erro => this._mensagem.texto = erro);
+
     }
 
     adiciona(event) {
@@ -61,9 +84,9 @@ class NegociacaoController {
                         this._mensagem.texto = 'Mensagem adionada com sucesso';
                         this._limpaFormulario();
 
-                    })
-                    .catch(erro => this._mensagem.texto = erro);
-            });
+                    });
+
+            }).catch(erro => this._mensagem.texto = erro);
     }
 
     ordena(coluna) {
