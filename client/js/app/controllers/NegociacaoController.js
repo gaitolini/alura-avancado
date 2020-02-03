@@ -104,26 +104,36 @@ class NegociacaoController {
     importaNegociacoes() {
 
         let service = new NegociacaoService();
+        ConnectionFactory
+            .getConnection()
+            .then(conexao => {
+                Promise.all([
+                        service.pullNegociacoesDaSemana(),
+                        service.pullNegociacoesDaSemanaAnterior(),
+                        service.pullNegociacoesDaSemanaRetrasada()
+                    ])
+                    .then(todasNegociacoes =>
+                        todasNegociacoes
+                        .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
+                        .filter(negociacao =>
+                            !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
+                                JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
+                    )
+                    .then(negociacoesFiltradas => {
+                        negociacoesFiltradas.forEach(negociacao => {
 
-        Promise.all([
-                service.pullNegociacoesDaSemana(),
-                service.pullNegociacoesDaSemanaAnterior(),
-                service.pullNegociacoesDaSemanaRetrasada()
-            ])
-            .then(todasNegociacoes =>
-                todasNegociacoes
-                .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
-                .filter(negociacao =>
-                    !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
-                        JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
-            )
-            .then(negociacoesFiltradas => {
-                negociacoesFiltradas
-                // .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
-                    .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
-                this._mensagem.texto = 'Negociações  importadas com sucesso.';
-            })
-            .catch(erro => this._mensagem.texto = erro);
+                            //Pega a conex�o instancia o Dao e add cada negocia��o..
+                            //..no banco(indexDB)
+                            new NegociacaoDao(conexao)
+                                .adiciona(negociacao)
+                                .then(() => this._listaNegociacoes.adiciona(negociacao))
+                                .catch(erro => this._mensagem.texto = erro);
+                        });
+                        this._mensagem.texto = 'Negociações importadas com sucesso.';
+                    })
+                    .catch(erro => this._mensagem.texto = erro);
+
+            }).catch(erro => this._mensagem.texto = erro)
 
     }
 
