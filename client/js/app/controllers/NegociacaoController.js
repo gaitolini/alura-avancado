@@ -106,15 +106,41 @@ class NegociacaoController {
         let service = new NegociacaoService();
 
         Promise.all([
-            service.pullNegociacoesDaSemana(),
-            service.pullNegociacoesDaSemanaAnterior(),
-            service.pullNegociacoesDaSemanaRetrasada()]
-        ).then(negociacoes => {
-            negociacoes
+                service.pullNegociacoesDaSemana(),
+                service.pullNegociacoesDaSemanaAnterior(),
+                service.pullNegociacoesDaSemanaRetrasada()
+            ])
+            .then(todasNegociacoes =>
+                todasNegociacoes
                 .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
-                .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
-            this._mensagem.texto = 'Negociações  importadas com sucesso.';
-        })
+                .filter(negociacao =>
+                    !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
+                        JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
+            )
+            .then(negociacoesFiltradas => {
+                negociacoesFiltradas
+                // .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
+                    .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+                this._mensagem.texto = 'Negociações  importadas com sucesso.';
+            })
+            .catch(erro => this._mensagem.texto = erro);
+
+    }
+
+    importaNegociacoe2() {
+
+        let service = new NegociacaoService();
+        service
+            .obterNegociacoes()
+            .then(negociacoes =>
+                negociacoes.filter(negociacao =>
+                    !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
+                        JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
+            )
+            .then(negociacoes => negociacoes.forEach(negociacao => {
+                this._listaNegociacoes.adiciona(negociacao);
+                this._mensagem.texto = 'Negociações do período importadas'
+            }))
             .catch(erro => this._mensagem.texto = erro);
     }
 
