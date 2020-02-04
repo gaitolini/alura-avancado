@@ -6,7 +6,6 @@ class NegociacaoController {
         this._inputData = $("#data");
         this._inputQuantidade = $("#quantidade");
         this._inputValor = $("#valor");
-
         this._ordemAtual = '';
 
         this._mensagem = new Bind(
@@ -26,7 +25,7 @@ class NegociacaoController {
     }
 
 
-    _init() {
+    _init() { //Função de inicialização do connstructor
 
         //carregando o banco de dado 
         this._service
@@ -39,14 +38,13 @@ class NegociacaoController {
 
         setInterval(() => {
             this.importaNegociacoes();
-        }, 8000);
+        }, 10000);
     }
 
     _limpaFormulario() {
         this._inputData.value = '';
         this._inputQuantidade.value = 1;
         this._inputValor.value = 0.0
-
         this._inputData.focus();
     }
 
@@ -55,24 +53,19 @@ class NegociacaoController {
             DateHelper.strToDate(this._inputData.value),
             parseInt(this._inputQuantidade.value),
             parseFloat(this._inputValor.value));
-
     }
 
     apaga() {
-
         this._service
             .apaga()
             .then(mensagem => {
                 this._mensagem.texto = mensagem;
                 this._listaNegociacoes.limpa();
             }).catch(erro => this._mensagem.texto = erro);
-
     }
 
     adiciona(event) {
-
         event.preventDefault();
-
         let negociacao = this._criaNegociacao();
 
         this._service
@@ -86,14 +79,11 @@ class NegociacaoController {
 
     ordena(coluna) {
         if (this._ordemAtual == coluna) {
-            //inverte a  ordem da lista
-            this._listaNegociacoes.inverteOrdem();
+            this._listaNegociacoes.inverteOrdem(); //inverte a  ordem da lista
         } else {
-
             this._listaNegociacoes.ordena((a, b) => a[coluna] - b[coluna]);
         }
         this._ordemAtual = coluna;
-
     }
 
     importaNegociacoes() {
@@ -108,41 +98,5 @@ class NegociacaoController {
                 });
             })
             .catch(erro => this._mensagem.texto = erro)
-
     }
-
-    // let service = this._service;
-    // ConnectionFactory
-    //     .getConnection()
-    //     .then(conexao => {
-    //         Promise.all([
-    //             service.pullNegociacoesDaSemana(),
-    //             service.pullNegociacoesDaSemanaAnterior(),
-    //             service.pullNegociacoesDaSemanaRetrasada()
-    //         ])
-    //             .then(todasNegociacoes =>
-    //                 todasNegociacoes
-    //                     .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
-    //                     .filter(negociacao =>
-    //                         !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
-    //                             JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
-    //             )
-    //             .then(negociacoesFiltradas => {
-    //                 negociacoesFiltradas.forEach(negociacao => {
-
-    //                     //Pega a conex�o instancia o Dao e add cada negocia��o..
-    //                     //..no banco(indexDB)
-    //                     new NegociacaoDao(conexao)
-    //                         .adiciona(negociacao)
-    //                         .then(() => this._listaNegociacoes.adiciona(negociacao))
-    //                         .catch(erro => this._mensagem.texto = erro);
-    //                 });
-    //                 this._mensagem.texto = 'Negociações importadas com sucesso.';
-    //             })
-    //             .catch(erro => this._mensagem.texto = erro);
-
-    //     }).catch(erro => this._mensagem.texto = erro)
-
-    // }
-
 }
