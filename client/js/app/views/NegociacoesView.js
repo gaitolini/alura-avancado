@@ -1,38 +1,32 @@
-class NegociacoesViews extends View {
+'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    template(model) {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-        return `   
-        <table class="table table-hover table-bordered">
-            <thead>
-                <tr>
-                    <th onclick="negociacaoController.ordena('data')" >DATA</th>
-                    <th onclick="negociacaoController.ordena('quantidade')" >QUANTIDADE</th>
-                    <th onclick="negociacaoController.ordena('valor')" >VALOR</th>
-                    <th onclick="negociacaoController.ordena('volume')" >VOLUME</th>
-                    
-                </tr>
-            </thead>
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-            <tbody>
-                ${model.negociacoes.map(n => `
-                    <tr>
-                        <td>${DateHelper.dateToStr(n.data)}</td>
-                        <td>${n.quantidade}</td>
-                        <td>${n.valor}</td>
-                        <td>${n.quantidade * n.valor}</td>
-                        
-                    </tr>
-                `).join('')}
-            </tbody>
+var NegociacoesViews = function (_View) {
+    _inherits(NegociacoesViews, _View);
 
-            <tfoot>
-                <td colspan="3"></>
-                <td>${model.volumeTotal}</td>
-            </tfoot>
-        </table>`
+    function NegociacoesViews() {
+        _classCallCheck(this, NegociacoesViews);
+
+        return _possibleConstructorReturn(this, (NegociacoesViews.__proto__ || Object.getPrototypeOf(NegociacoesViews)).apply(this, arguments));
     }
 
-}
+    _createClass(NegociacoesViews, [{
+        key: 'template',
+        value: function template(model) {
+
+            return '   \n        <table class="table table-hover table-bordered">\n            <thead>\n                <tr>\n                    <th onclick="negociacaoController.ordena(\'data\')" >DATA</th>\n                    <th onclick="negociacaoController.ordena(\'quantidade\')" >QUANTIDADE</th>\n                    <th onclick="negociacaoController.ordena(\'valor\')" >VALOR</th>\n                    <th onclick="negociacaoController.ordena(\'volume\')" >VOLUME</th>\n                    \n                </tr>\n            </thead>\n\n            <tbody>\n                ' + model.negociacoes.map(function (n) {
+                return '\n                    <tr>\n                        <td>' + DateHelper.dateToStr(n.data) + '</td>\n                        <td>' + n.quantidade + '</td>\n                        <td>' + n.valor + '</td>\n                        <td>' + n.quantidade * n.valor + '</td>\n                        \n                    </tr>\n                ';
+            }).join('') + '\n            </tbody>\n\n            <tfoot>\n                <td colspan="3"></>\n                <td>' + model.volumeTotal + '</td>\n            </tfoot>\n        </table>';
+        }
+    }]);
+
+    return NegociacoesViews;
+}(View);
+//# sourceMappingURL=NegociacoesView.js.map
