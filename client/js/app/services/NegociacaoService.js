@@ -74,4 +74,43 @@ class NegociacaoService {
 
     }
 
+    cadastra(negociacao) {
+
+        return ConnectionFactory
+            .getConnection()
+            .then(connection => new NegociacaoDao(connection))
+            .then(dao => dao.adiciona(negociacao))
+            .then(() => 'Negociação cadastrada com sucesso!')
+            .catch(erro => {
+                console.log(erro);
+                throw new Error("Não foi possível adicionar a negociação.")
+            });
+    }
+
+    lista() {
+
+        return ConnectionFactory
+            .getConnection()
+            .then(connection => new NegociacaoDao(connection))
+            .then(dao => dao.listaTodos())
+            .catch(erro => {
+                console.log(erro);
+                throw new Error('Não foi possivel carregar as negociaçõeso do BD.')
+            });
+
+    }
+
+    apaga() {
+
+        return ConnectionFactory
+            .getConnection()
+            .then(connection => new NegociacaoDao(connection))
+            .then(dao => dao.apagaTodos())
+            .then(() => 'Negociações apagada com sucesso!')
+            .catch(erro => {
+                console.log(erro);
+                throw new Error('Não foi possivel apagar as negociaçõeso do BD.')
+            });
+    }
+
 }
