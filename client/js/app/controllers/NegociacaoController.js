@@ -98,38 +98,51 @@ class NegociacaoController {
 
     importaNegociacoes() {
 
-        let service = this._service;
-        ConnectionFactory
-            .getConnection()
-            .then(conexao => {
-                Promise.all([
-                    service.pullNegociacoesDaSemana(),
-                    service.pullNegociacoesDaSemanaAnterior(),
-                    service.pullNegociacoesDaSemanaRetrasada()
-                ])
-                    .then(todasNegociacoes =>
-                        todasNegociacoes
-                            .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
-                            .filter(negociacao =>
-                                !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
-                                    JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
-                    )
-                    .then(negociacoesFiltradas => {
-                        negociacoesFiltradas.forEach(negociacao => {
-
-                            //Pega a conex�o instancia o Dao e add cada negocia��o..
-                            //..no banco(indexDB)
-                            new NegociacaoDao(conexao)
-                                .adiciona(negociacao)
-                                .then(() => this._listaNegociacoes.adiciona(negociacao))
-                                .catch(erro => this._mensagem.texto = erro);
-                        });
-                        this._mensagem.texto = 'Negociações importadas com sucesso.';
-                    })
-                    .catch(erro => this._mensagem.texto = erro);
-
-            }).catch(erro => this._mensagem.texto = erro)
+        this._service
+            .obterNegociacoesServer(this._listaNegociacoes.negociacoes)
+            .then(negociacoesFiltradas => {
+                negociacoesFiltradas.forEach(negociacao => {
+                    this._service.cadastra(negociacao)
+                        .then(() => this._listaNegociacoes.adiciona(negociacao))
+                    this._mensagem.texto = 'Negociações obtidas com sucesso do servidor';
+                });
+            })
+            .catch(erro => this._mensagem.texto = erro)
 
     }
+
+    // let service = this._service;
+    // ConnectionFactory
+    //     .getConnection()
+    //     .then(conexao => {
+    //         Promise.all([
+    //             service.pullNegociacoesDaSemana(),
+    //             service.pullNegociacoesDaSemanaAnterior(),
+    //             service.pullNegociacoesDaSemanaRetrasada()
+    //         ])
+    //             .then(todasNegociacoes =>
+    //                 todasNegociacoes
+    //                     .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
+    //                     .filter(negociacao =>
+    //                         !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
+    //                             JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
+    //             )
+    //             .then(negociacoesFiltradas => {
+    //                 negociacoesFiltradas.forEach(negociacao => {
+
+    //                     //Pega a conex�o instancia o Dao e add cada negocia��o..
+    //                     //..no banco(indexDB)
+    //                     new NegociacaoDao(conexao)
+    //                         .adiciona(negociacao)
+    //                         .then(() => this._listaNegociacoes.adiciona(negociacao))
+    //                         .catch(erro => this._mensagem.texto = erro);
+    //                 });
+    //                 this._mensagem.texto = 'Negociações importadas com sucesso.';
+    //             })
+    //             .catch(erro => this._mensagem.texto = erro);
+
+    //     }).catch(erro => this._mensagem.texto = erro)
+
+    // }
 
 }

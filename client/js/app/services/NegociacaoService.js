@@ -74,6 +74,25 @@ class NegociacaoService {
 
     }
 
+    obterNegociacoesServer(listaAtual) {
+        return Promise.all([
+            this.pullNegociacoesDaSemana(),
+            this.pullNegociacoesDaSemanaAnterior(),
+            this.pullNegociacoesDaSemanaRetrasada()
+        ])
+            .then(todasNegociacoes =>
+                todasNegociacoes
+                    .reduce((arrayNegociacao, array) => arrayNegociacao.concat(array), [])
+                    .filter(negociacao =>
+                        !listaAtual.some(negociacaoExistente =>
+                            JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
+            )
+            .catch(erro => {
+                console.log(erro);
+                throw new Error('Não foi possível obeter negociações do servidor');
+            });
+    }
+
     cadastra(negociacao) {
 
         return ConnectionFactory
