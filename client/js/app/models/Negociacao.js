@@ -3,7 +3,7 @@
 System.register([], function (_export, _context) {
     "use strict";
 
-    var _createClass, ListaNegociacoes;
+    var _createClass, Negociacao;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -32,52 +32,44 @@ System.register([], function (_export, _context) {
                 };
             }();
 
-            _export("ListaNegociacoes", ListaNegociacoes = function () {
-                function ListaNegociacoes() {
-                    _classCallCheck(this, ListaNegociacoes);
+            _export("Negociacao", Negociacao = function () {
+                function Negociacao(data, quantidade, valor) {
+                    _classCallCheck(this, Negociacao);
 
-                    this._negociacoes = [];
+                    this._data = new Date(data.getTime());
+                    this._quantidade = quantidade;
+                    this._valor = valor;
+                    Object.freeze(this);
                 }
 
-                _createClass(ListaNegociacoes, [{
-                    key: "adiciona",
-                    value: function adiciona(negociacao) {
-                        this._negociacoes.push(negociacao);
-                    }
-                }, {
-                    key: "ordena",
-                    value: function ordena(criterio) {
-                        this._negociacoes.sort(criterio);
-                    }
-                }, {
-                    key: "inverteOrdem",
-                    value: function inverteOrdem() {
-                        this._negociacoes.reverse();
-                    }
-                }, {
-                    key: "limpa",
-                    value: function limpa() {
-                        this._negociacoes = [];
-                    }
-                }, {
-                    key: "negociacoes",
+                _createClass(Negociacao, [{
+                    key: "volume",
                     get: function get() {
-                        return [].concat(this._negociacoes);
+
+                        return this._quantidade * this._valor;
                     }
                 }, {
-                    key: "volumeTotal",
+                    key: "data",
                     get: function get() {
-                        return this._negociacoes.reduce(function (total, n) {
-                            return total + n.volume;
-                        }, 0.0);
+                        return new Date(this._data.getTime());
+                    }
+                }, {
+                    key: "quantidade",
+                    get: function get() {
+                        return this._quantidade;
+                    }
+                }, {
+                    key: "valor",
+                    get: function get() {
+                        return this._valor;
                     }
                 }]);
 
-                return ListaNegociacoes;
+                return Negociacao;
             }());
 
-            _export("ListaNegociacoes", ListaNegociacoes);
+            _export("Negociacao", Negociacao);
         }
     };
 });
-//# sourceMappingURL=ListaNegociacoes.js.map
+//# sourceMappingURL=Negociacao.js.map
