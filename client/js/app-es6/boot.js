@@ -1,5 +1,5 @@
 import { currentInstance } from "./controllers/NegociacaoController";
-// import {  } from "./polyfill/fetch";  Lembrar de descomentar qdo fizer o commit dessa API e retirar o ES6.js
+import {} from "./polyfill/fetch"; //Lembrar de descomentar qdo fizer o commit dessa API e retirar o ES6.js
 
 let negociacaoController = currentInstance();
 
