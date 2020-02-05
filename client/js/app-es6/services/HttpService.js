@@ -1,4 +1,4 @@
-class HttpService {
+export class HttpService {
 
     // Continuaremos com as melhorias no código e a seguir, 
     // veremos algo mais avançado.Nós criamos a classe HttpService, 
