@@ -1,4 +1,7 @@
-class NegociacoesViews extends View {
+import { View } from './View';
+import { DateHelper } from '../helpers/DateHelper';
+
+export class NegociacoesViews extends View {
 
 
 

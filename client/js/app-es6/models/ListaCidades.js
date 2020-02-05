@@ -1,4 +1,4 @@
-class ListaCidades {
+export class ListaCidades {
 
     constructor() {
 

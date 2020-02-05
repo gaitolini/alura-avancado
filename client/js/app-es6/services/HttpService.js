@@ -1,4 +1,4 @@
-class HttpService {
+export class HttpService {
     // 0: requisição ainda não iniciada
 
     // 1: conexão com o servidor estabelecida
