@@ -38,53 +38,33 @@ System.register([], function (_export, _context) {
                 }
 
                 _createClass(HttpService, [{
+                    key: '_handleErrors',
+                    value: function _handleErrors(res) {
+                        if (!res.ok) throw new Error(res.statusText);
+                        return res;
+                    }
+                }, {
                     key: 'get',
                     value: function get(url) {
+                        var _this = this;
 
-                        return new Promise(function (resolve, reject) {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('GET', url);
-
-                            xhr.onreadystatechange = function () {
-
-                                if (xhr.readyState == 4) {
-
-                                    if (xhr.status == 200) {
-
-                                        resolve(JSON.parse(xhr.responseText));
-                                    } else {
-                                        console.log(xhr.responseText);
-                                        reject('Não foi possível obter dados da URL.');
-                                    }
-                                }
-                            };
-
-                            xhr.send();
+                        return fetch(url).then(function (res) {
+                            return _this._handleErrors(res);
+                        }).then(function (res) {
+                            return res.json();
                         });
                     }
                 }, {
                     key: 'post',
-                    value: function post(url, objeto) {
-                        return new Promise(function (resolve, reject) {
+                    value: function post(url, dado) {
+                        var _this2 = this;
 
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('POST', url, true);
-                            xhr.setRequestHeader("Content-type", "application/json");
-
-                            xhr.onreadystatechange = function () {
-                                console.log('Status do POST: ' + xhr.status);
-
-                                if (xhr.readyState == 4) {
-
-                                    if (xhr.status == 200) {
-                                        resolve('Dados enviados com com sucesso para o servidor.');
-                                    } else {
-                                        reject('Erro no envio de dados');
-                                    }
-                                }
-                            };
-
-                            xhr.send(JSON.stringify(objeto));
+                        return fetch(url, {
+                            headers: { 'Content-Type': 'application/json' },
+                            method: 'post',
+                            body: JSON.stringify(dado)
+                        }).then(function (res) {
+                            return _this2._handleErrors(res);
                         });
                     }
                 }]);

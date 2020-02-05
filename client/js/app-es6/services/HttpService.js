@@ -1,61 +1,38 @@
 export class HttpService {
-    // 0: requisição ainda não iniciada
 
-    // 1: conexão com o servidor estabelecida
+    // Continuaremos com as melhorias no código e a seguir, 
+    // veremos algo mais avançado.Nós criamos a classe HttpService, 
+    // depois, escondemos a complexidade de trabalhar com o XMLHttpRequest().
+    // Nós fizemos método get e post devolverem uma Promise, e assim, 
+    // escondemos a complexidade de trabalhar com tal objeto.
 
-    // 2: requisição recebida
+    // Estamos usando o ECMAScript 2015.
+    //  Não usamos mais o termo "ES 6", 
+    //  porque a cada ano, 
+    //  o JavaScript ganha novos recursos.No ES 2016, 
+    //  foi incluída uma API com o objetivo de simplificar a criação 
+    //  de requisições Ajax: Fetch API, uma API de busca do JS.O que veremos aqui, 
+    //  vai além do ECMAScript 2015.
 
-    // 3: processando requisição
-
-    // 4: requisição está concluída e a resposta está pronta
+    _handleErrors(res) {
+        if (!res.ok) throw new Error(res.statusText);
+        return res;
+    }
 
     get(url) {
 
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', url);
-
-            xhr.onreadystatechange = () => {
-
-                if (xhr.readyState == 4) {
-
-                    if (xhr.status == 200) {
-
-                        resolve(JSON.parse(xhr.responseText));
-                    } else {
-                        console.log(xhr.responseText);
-                        reject('Não foi possível obter dados da URL.');
-                    }
-                }
-            };
-
-            xhr.send();
-        });
+        return fetch(url)
+            .then(res => this._handleErrors(res))
+            .then(res => res.json());
     }
 
-    post(url, objeto) {
-        return new Promise((resolve, reject) => {
+    post(url, dado) {
 
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', url, true);
-            xhr.setRequestHeader("Content-type", "application/json");
-
-            xhr.onreadystatechange = () => {
-                console.log(`Status do POST: ${xhr.status}`);
-
-                if (xhr.readyState == 4) {
-
-                    if (xhr.status == 200) {
-                        resolve('Dados enviados com com sucesso para o servidor.');
-
-                    } else {
-                        reject('Erro no envio de dados');
-                    }
-                }
-
-            }
-
-            xhr.send(JSON.stringify(objeto));
-        });
+        return fetch(url, {
+                headers: { 'Content-Type': 'application/json' },
+                method: 'post',
+                body: JSON.stringify(dado)
+            })
+            .then(res => this._handleErrors(res));
     }
 }
